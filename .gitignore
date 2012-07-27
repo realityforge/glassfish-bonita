@@ -1,0 +1,11 @@
+/artifacts
+/target
+/reports
+/*.iws
+/*.ipr
+/*.iml
+/_buildr.rb
+/bin
+/.bundle
+/downloads
+
