@@ -1,4 +1,4 @@
-fisg-bonita
-===========
+glassfish-bonita
+================
 
-Repackaging of the bonita product compatible with GlassFish
+A script to build a glassfish version of the Bonita tools.
