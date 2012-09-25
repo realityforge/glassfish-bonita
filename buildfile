@@ -52,7 +52,7 @@ define "bpm" do
     end
   end
 
-  package.enhance do
+  compile.enhance do
     mkdir_p _(:target)
     File.open(_(:target, "version.txt"), "wb") do |f|
       f.write "PRODUCT_VERSION=#{project.version}\n"
