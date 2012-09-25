@@ -37,4 +37,11 @@ define "bpm" do
       war.merge("#{unzip_dir}/xcmis.war")
     end
   end
+
+  package.enhance do
+    mkdir_p _(:target)
+    File.open(_(:target, "version.txt"), "wb") do |f|
+      f.write "PRODUCT_VERSION=#{project.version}\n"
+    end
+  end
 end
