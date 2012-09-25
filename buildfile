@@ -29,10 +29,10 @@ define "bpm" do
 
   define "keygen" do
     compile.enhance %w(unzip)
-    package(:war).tap do |war|
-      war.merge("#{unzip_dir}/commons-codec-1.4.jar")
-      war.merge("#{unzip_dir}/generateKey-5.7.1.jar")
-      war.merge("#{unzip_dir}/sysUtil-5.7.1.jar")
+    package(:jar).tap do |jar|
+      jar.merge("#{unzip_dir}/commons-codec-1.4.jar")
+      jar.merge("#{unzip_dir}/generateKey-5.7.1.jar")
+      jar.merge("#{unzip_dir}/sysUtil-5.7.1.jar")
     end
   end
 
