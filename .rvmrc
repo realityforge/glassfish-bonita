@@ -1,27 +1,33 @@
 #!/usr/bin/env bash
-
-ruby_string="jruby-1.6.7" 
-project_name="glassfish-bonita"
-bundler_gem_home="vendor/bundle" 
 cat <<EOF
-***************************************************************
-*  RVM will install the environment for ${project_name} now.  *
-***************************************************************
+*******************************************************
+*  RVM will install the development environment now.  *
+*******************************************************
 EOF
 
+export ruby_string="jruby-1.6.7"
+project_dir=`pwd`
+project_name=${JOB_NAME-`basename "$project_dir"`}
+
 detected_version=`rvm list strings | grep ${ruby_string}`
-if [ ${detected_version} != ${ruby_string} ] ; then 
-  echo "${ruby_string} was not found, running 'rvm install ${ruby_string}'..." 
+if [ "X" == "X${detected_version}" ]; then
+  echo "${ruby_string} was not found, running 'rvm install ${ruby_string}'..."
   rvm install ${ruby_string}
 fi
 
-rvm use --create "${ruby_string}@${project_name}" 
+# If running in the ci then remove the existing gemset
+if [ "X" != "X$JENKINS_HOME" ]; then
+  rvm ${ruby_string} --force gemset delete ${project_name}
+  rm -f Gemfile.lock
+fi
+
+rvm use "${ruby_string}@${project_name}" --create
 
 if [ -f Gemfile ]; then
-  gem list | grep 'bundler' &> /dev/null 
-  if [ $? -gt 0 ]; then 
-    echo "Installing bundler..." 
-    gem install bundler 
+  gem list | grep 'bundler' &> /dev/null
+  if [ $? -gt 0 ]; then
+    echo "Installing bundler..."
+    gem install bundler
   fi
   bundle install --binstubs
 fi
