@@ -7,6 +7,7 @@ task "unzip" do
   package_zip.invoke
   unzip_task = unzip(unzip_dir => package_zip)
   unzip_task.from_path("bonita_user_experience/with_execution_engine_without_client").include("bonita.war")
+  unzip_task.from_path("conf/bonita").include("client*")
   unzip_task.from_path("xcmis").include("xcmis.war")
   unzip_task.from_path("security").include("commons-codec-1.4.jar")
   unzip_task.from_path("security").include("generateKey-5.7.1.jar")
@@ -33,6 +34,14 @@ define "bpm" do
       jar.merge("#{unzip_dir}/commons-codec-1.4.jar")
       jar.merge("#{unzip_dir}/generateKey-5.7.1.jar")
       jar.merge("#{unzip_dir}/sysUtil-5.7.1.jar")
+    end
+  end
+
+  desc "A zip of the serverside client configuration directory"
+  define "client" do
+    compile.enhance %w(unzip)
+    package(:zip).tap do |zip|
+      zip.include("#{unzip_dir}/client/*")
     end
   end
 
