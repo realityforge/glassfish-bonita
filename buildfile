@@ -15,10 +15,6 @@ task "unzip" do
   unzip_task.extract
 end
 
-file("#{unzip_dir}/bonita.war" => "unzip")
-#file("#{unzip_dir}/bonita-server-rest.war" => "unzip")
-file("#{unzip_dir}/xcmis.war" => "unzip")
-
 define "bpm" do
   project.group = "au.gov.vic.dse.fire.bonita"
   compile.options.source = '1.6'
