@@ -9,6 +9,9 @@ task "unzip" do
   unzip_task.from_path("bonita_user_experience/with_execution_engine_without_client").include("bonita.war")
   #unzip_task.from_path("bonita_execution_engine/interfaces/REST/with_engine").include("bonita-server-rest.war")
   unzip_task.from_path("xcmis").include("xcmis.war")
+  unzip_task.from_path("security").include("commons-codec-1.4.jar")
+  unzip_task.from_path("security").include("generateKey-5.7.1.jar")
+  unzip_task.from_path("security").include("sysUtil-5.7.1.jar")
   unzip_task.extract
 end
 
@@ -28,6 +31,15 @@ define "bpm" do
       war.merge("#{unzip_dir}/bonita.war")
       #.exclude("WEB-INF/web.xml")
       #war.merge("#{unzip_dir}/bonita-server-rest.war").exclude("WEB-INF/web.xml")
+    end
+  end
+
+  define "keygen" do
+    compile.enhance %w(unzip)
+    package(:war).tap do |war|
+      war.merge("#{unzip_dir}/commons-codec-1.4.jar")
+      war.merge("#{unzip_dir}/generateKey-5.7.1.jar")
+      war.merge("#{unzip_dir}/sysUtil-5.7.1.jar")
     end
   end
 
