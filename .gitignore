@@ -1,5 +1,7 @@
 /artifacts
 /target
+/bonita/target
+/xcmis/target
 /reports
 /*.iws
 /*.ipr
