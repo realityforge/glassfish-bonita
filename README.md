@@ -10,6 +10,13 @@ Actions taken as part of the build;
   patterns to use a /r prefix
 
 
+************************** WARNING **************************
+
+Need to follow directions on http://stackoverflow.com/questions/11012821/jax-rs-custom-pathparam-validator
+
+*********************** END WARNING *************************
+
+
 Bonita Dev indicates it possible at
 
 http://www.bonitasoft.org/forum/viewtopic.php?id=8934
