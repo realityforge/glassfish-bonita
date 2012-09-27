@@ -26,7 +26,6 @@ define "bpm" do
     compile.enhance %w(unzip)
     package(:war).tap do |war|
       war.merge("#{unzip_dir}/bonita.war").exclude("WEB-INF/web.xml")
-      war.merge("#{unzip_dir}/without_engine/bonita-server-rest.war").exclude("WEB-INF/web.xml")
       war.libs += Dir["#{unzip_dir}/without_engine/*.jar"]
     end
   end
