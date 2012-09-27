@@ -4,6 +4,17 @@
 <!--suppress WebProperties -->
 <web-app>
   <display-name>Bonita Console</display-name>
+
+  <!-- Required configuration in Glassfish -->
+  <context-param>
+    <param-name>resteasy.scan</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>resteasy.servlet.mapping.prefix</param-name>
+    <param-value>/rest</param-value>
+  </context-param>
+
   <filter>
     <filter-name>BPMURLSupportFilter</filter-name>
     <filter-class>org.bonitasoft.forms.server.filter.BPMURLSupportFilter</filter-class>
@@ -124,6 +135,11 @@
     <filter-name>SetCharacterEncoding</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+  <!-- Added to support resteasy. Not sure if it is needed -->
+  <listener>
+    <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+  </listener>
 
   <!-- the following sections extracted from the REST API war -->
   <servlet>
