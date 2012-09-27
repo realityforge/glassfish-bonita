@@ -7,6 +7,7 @@ task "unzip" do
   package_zip.invoke
   unzip_task = unzip(unzip_dir => package_zip)
   unzip_task.from_path("bonita_user_experience/with_execution_engine_without_client").include("bonita.war")
+  unzip_task.from_path("bonita_execution_engine/interfaces/REST").include("without_engine*")
   unzip_task.from_path("conf/bonita").include("client*")
   unzip_task.from_path("xcmis").include("xcmis.war")
   unzip_task.from_path("security").include("commons-codec-1.4.jar")
@@ -24,7 +25,9 @@ define "bpm" do
   define "bonita" do
     compile.enhance %w(unzip)
     package(:war).tap do |war|
-      war.merge("#{unzip_dir}/bonita.war")
+      war.merge("#{unzip_dir}/bonita.war").exclude("WEB-INF/web.xml")
+      war.merge("#{unzip_dir}/without_engine/bonita-server-rest.war").exclude("WEB-INF/web.xml")
+      war.libs += Dir["#{unzip_dir}/without_engine/*.jar"]
     end
   end
 
