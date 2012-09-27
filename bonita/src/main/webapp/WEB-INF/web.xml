@@ -136,11 +136,6 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-  <!-- Added to support resteasy. Not sure if it is needed -->
-  <listener>
-    <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
-  </listener>
-
   <!-- the following sections extracted from the REST API war -->
   <servlet>
     <servlet-name>BonitaRESTServer</servlet-name>
