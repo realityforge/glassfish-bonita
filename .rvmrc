@@ -1,33 +1,30 @@
 #!/usr/bin/env bash
 cat <<EOF
-*******************************************************
-*  RVM will install the development environment now.  *
-*******************************************************
+*****************************************************
+*  RVM will setup the development environment now.  *
+*****************************************************
 EOF
 
-export ruby_string="jruby-1.6.7"
-project_dir=`pwd`
-project_name=${JOB_NAME-`basename "$project_dir"`}
+if [ -f .ruby_version ]; then
+  ruby_string=${RVM_RUBY_NAME-`cat .ruby_version 2>/dev/null`}
+  ruby_string="${ruby_string//[[:space:]]/}"
+else
+  ruby_string=${RVM_RUBY_NAME-"1.9.3"}
+fi
+export project_name=${RVM_GEMSET_NAME-`basename \`pwd\``}
 
 detected_version=`rvm list strings | grep ${ruby_string}`
-if [ "X" == "X${detected_version}" ]; then
+if [ "X" == "X${detected_version}" ] ; then
   echo "${ruby_string} was not found, running 'rvm install ${ruby_string}'..."
   rvm install ${ruby_string}
 fi
 
-# If running in the ci then remove the existing gemset
-if [ "X" != "X$JENKINS_HOME" ]; then
-  rvm ${ruby_string} --force gemset delete ${project_name}
-  rm -f Gemfile.lock
-fi
-
-rvm use "${ruby_string}@${project_name}" --create
+rvm use --create "${ruby_string}@${project_name}"
 
 if [ -f Gemfile ]; then
   gem list | grep 'bundler' &> /dev/null
   if [ $? -gt 0 ]; then
-    echo "Installing bundler..."
     gem install bundler
   fi
-  bundle install --binstubs
+  bundle install --binstubs | grep -v 'Using' | grep -v 'complete' | sed '/^$/d'
 fi
