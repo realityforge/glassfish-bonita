@@ -8,6 +8,8 @@ task "unzip" do
   unzip_task = unzip(unzip_dir => package_zip)
   unzip_task.from_path("bonita_user_experience/with_execution_engine_without_client").include("bonita.war")
   unzip_task.from_path("bonita_execution_engine/interfaces/REST").include("without_engine*")
+  unzip_task.from_path("bonita_execution_engine/engine").include("libs/dom4j*.jar")
+  unzip_task.from_path("bonita_execution_engine/engine").include("libs/xpp*.jar")
   unzip_task.from_path("conf/bonita").include("client*")
   unzip_task.from_path("xcmis").include("xcmis.war")
   unzip_task.from_path("security").include("commons-codec-1.4.jar")
@@ -51,6 +53,8 @@ define "bpm" do
     compile.enhance %w(unzip)
     package(:war).tap do |war|
       war.merge("#{unzip_dir}/xcmis.war")
+      war.libs += Dir["#{unzip_dir}/libs/dom4j*.jar"]
+      war.libs += Dir["#{unzip_dir}/libs/xpp*.jar"]
     end
   end
 
