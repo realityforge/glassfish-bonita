@@ -1,5 +1,5 @@
 BONITA_VERSION="5.7.1"
-unzip_dir = "target/bonita-#{BONITA_VERSION}"
+unzip_dir = "#{File.dirname(__FILE__)}/target/bonita"
 
 task "unzip" do
   package_url = "http://repo.fire.dse.vic.gov.au/content/repositories/releases/com/bonitasoft/bonitasoft-server-sp/#{BONITA_VERSION}/bonitasoft-server-sp-#{BONITA_VERSION}.zip"
@@ -25,36 +25,59 @@ define "bpm" do
   compile.options.lint = 'all'
 
   define "bonita" do
-    compile.enhance %w(unzip)
+    resources.enhance %w(unzip) do
+      package(:war).path("WEB-INF/lib").tap do |path|
+        path.include Dir["#{unzip_dir}/without_engine/*.jar"]
+      end
+    end
     package(:war).tap do |war|
       war.merge("#{unzip_dir}/bonita.war").exclude("WEB-INF/web.xml")
-      war.libs += Dir["#{unzip_dir}/without_engine/*.jar"]
+    end
+    check package(:war) do
+      it.should contain("console/scripts/bonita.js")
+      it.should contain("WEB-INF/lib/xpp3_min-1.1.4c.jar")
     end
   end
 
   define "keygen" do
-    compile.enhance %w(unzip)
+    resources.enhance %w(unzip)
     package(:jar).tap do |jar|
       jar.merge("#{unzip_dir}/commons-codec-1.4.jar")
       jar.merge("#{unzip_dir}/generateKey-5.7.1.jar")
       jar.merge("#{unzip_dir}/sysUtil-5.7.1.jar")
     end
+    check package(:jar) do
+      it.should contain("org/apache/commons/codec/language/Soundex.class")
+      it.should contain("org/bonitasoft/security/generateKey/GenerateKey.class")
+      it.should contain("org/bonitasoft/security/sysutil/SysUtil.class")
+    end
   end
 
   desc "A zip of the serverside client configuration directory"
   define "client" do
-    compile.enhance %w(unzip)
-    package(:zip).tap do |zip|
-      zip.include("#{unzip_dir}/client/*")
+    resources.enhance %w(unzip) do
+      package(:zip).tap do |zip|
+        zip.include("#{unzip_dir}/client/*")
+      end
+    end
+    package(:zip)
+    check package(:zip) do
+      it.should contain("conf/web/common/conf/cache-config.xml")
     end
   end
 
   define "xcmis", :base_dir => "xcmis" do
-    compile.enhance %w(unzip)
+    resources.enhance %w(unzip) do
+      package(:war).path("WEB-INF/lib").tap do |path|
+        path.include Dir["#{unzip_dir}/libs/dom4j-*.jar"]
+        path.include Dir["#{unzip_dir}/libs/xpp*.jar"]
+      end
+    end
     package(:war).tap do |war|
       war.merge("#{unzip_dir}/xcmis.war")
-      war.libs += Dir["#{unzip_dir}/libs/dom4j*.jar"]
-      war.libs += Dir["#{unzip_dir}/libs/xpp*.jar"]
+    end
+    check package(:war), "should contain dependent libraries" do
+      it.should contain("WEB-INF/lib/dom4j-1.6.1.jar")
     end
   end
 
@@ -64,4 +87,6 @@ define "bpm" do
       f.write "PRODUCT_VERSION=#{project.version}\n"
     end
   end
+
+  project.clean { rm_rf unzip_dir }
 end
