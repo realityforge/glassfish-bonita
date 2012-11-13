@@ -1,6 +1,6 @@
 require 'buildr/git_auto_version'
 
-BONITA_VERSION="5.7.1"
+BONITA_VERSION="5.8"
 unzip_dir = "#{File.dirname(__FILE__)}/target/bonita"
 
 task "unzip" do
@@ -13,10 +13,9 @@ task "unzip" do
   unzip_task.from_path("bonita_execution_engine/engine").include("libs/dom4j*.jar")
   unzip_task.from_path("bonita_execution_engine/engine").include("libs/xpp*.jar")
   unzip_task.from_path("conf/bonita").include("client*")
-  unzip_task.from_path("xcmis").include("xcmis.war")
   unzip_task.from_path("security").include("commons-codec-1.4.jar")
-  unzip_task.from_path("security").include("generateKey-5.7.1.jar")
-  unzip_task.from_path("security").include("sysUtil-5.7.1.jar")
+  unzip_task.from_path("security").include("generateKey-#{BONITA_VERSION}.jar")
+  unzip_task.from_path("security").include("sysUtil-#{BONITA_VERSION}.jar")
   unzip_task.extract
 end
 
@@ -47,8 +46,8 @@ define "bpm" do
     resources.enhance %w(unzip)
     package(:jar).tap do |jar|
       jar.merge("#{unzip_dir}/commons-codec-1.4.jar")
-      jar.merge("#{unzip_dir}/generateKey-5.7.1.jar")
-      jar.merge("#{unzip_dir}/sysUtil-5.7.1.jar")
+      jar.merge("#{unzip_dir}/generateKey-#{BONITA_VERSION}.jar")
+      jar.merge("#{unzip_dir}/sysUtil-#{BONITA_VERSION}.jar")
     end
     check package(:jar) do
       it.should contain("org/apache/commons/codec/language/Soundex.class")
@@ -67,21 +66,6 @@ define "bpm" do
     package(:zip)
     check package(:zip) do
       it.should contain("conf/web/common/conf/cache-config.xml")
-    end
-  end
-
-  define "xcmis", :base_dir => "xcmis" do
-    resources.enhance %w(unzip) do
-      package(:war).path("WEB-INF/lib").tap do |path|
-        path.include Dir["#{unzip_dir}/libs/dom4j-*.jar"]
-        path.include Dir["#{unzip_dir}/libs/xpp*.jar"]
-      end
-    end
-    package(:war).tap do |war|
-      war.merge("#{unzip_dir}/xcmis.war")
-    end
-    check package(:war), "should contain dependent libraries" do
-      it.should contain("WEB-INF/lib/dom4j-1.6.1.jar")
     end
   end
 
