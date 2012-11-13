@@ -26,6 +26,8 @@ define "bpm" do
   compile.options.target = '1.6'
   compile.options.lint = 'all'
 
+  project.version = ENV['PRODUCT_VERSION'] if ENV['PRODUCT_VERSION']
+
   define "bonita" do
     resources.enhance %w(unzip) do
       package(:war).path("WEB-INF/lib").tap do |path|
@@ -80,13 +82,6 @@ define "bpm" do
     end
     check package(:war), "should contain dependent libraries" do
       it.should contain("WEB-INF/lib/dom4j-1.6.1.jar")
-    end
-  end
-
-  compile.enhance do
-    mkdir_p _(:target)
-    File.open(_(:target, "version.txt"), "wb") do |f|
-      f.write "PRODUCT_VERSION=#{project.version}\n"
     end
   end
 
