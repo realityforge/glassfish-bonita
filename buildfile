@@ -1,3 +1,5 @@
+require 'buildr/git_auto_version'
+
 BONITA_VERSION="5.7.1"
 unzip_dir = "#{File.dirname(__FILE__)}/target/bonita"
 
