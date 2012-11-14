@@ -1,7 +1,7 @@
 require 'buildr/git_auto_version'
 
 BONITA_VERSION="5.8"
-unzip_dir = "#{File.dirname(__FILE__)}/target/bonita"
+unzip_dir = "#{File.dirname(__FILE__)}/target/extracted"
 
 task "unzip" do
   package_url = "http://repo.fire.dse.vic.gov.au/content/repositories/releases/com/bonitasoft/bonitasoft-server-sp/#{BONITA_VERSION}/bonitasoft-server-sp-#{BONITA_VERSION}.zip"
@@ -19,7 +19,18 @@ task "unzip" do
   unzip_task.extract
 end
 
-define "bpm" do
+def define_with_central_layout(name, &block)
+  layout = Layout::Default.new
+  layout[:target] = "#{File.dirname(__FILE__)}/target/#{name}"
+  layout[:reports] = "#{File.dirname(__FILE__)}/target/#{name}/_reports"
+
+  define(name, :layout => layout) do
+    project.instance_eval &block
+    project
+  end
+end
+
+define_with_central_layout("bpm") do
   project.group = "au.gov.vic.dse.fire.bonita"
   compile.options.source = '1.6'
   compile.options.target = '1.6'
@@ -27,7 +38,7 @@ define "bpm" do
 
   project.version = ENV['PRODUCT_VERSION'] if ENV['PRODUCT_VERSION']
 
-  define "bonita" do
+  define_with_central_layout("bonita") do
     resources.enhance %w(unzip) do
       package(:war).path("WEB-INF/lib").tap do |path|
         path.include Dir["#{unzip_dir}/without_engine/*.jar"]
@@ -42,7 +53,7 @@ define "bpm" do
     end
   end
 
-  define "keygen" do
+  define_with_central_layout("keygen") do
     resources.enhance %w(unzip)
     package(:jar).tap do |jar|
       jar.merge("#{unzip_dir}/commons-codec-1.4.jar")
@@ -57,7 +68,7 @@ define "bpm" do
   end
 
   desc "A zip of the serverside client configuration directory"
-  define "client" do
+  define_with_central_layout("client") do
     resources.enhance %w(unzip) do
       package(:zip).tap do |zip|
         zip.include("#{unzip_dir}/client/*")
@@ -68,6 +79,4 @@ define "bpm" do
       it.should contain("conf/web/common/conf/cache-config.xml")
     end
   end
-
-  project.clean { rm_rf unzip_dir }
 end
