@@ -36,6 +36,7 @@ define_with_central_layout('bonita') do
   project.version = ENV['PRODUCT_VERSION'] if ENV['PRODUCT_VERSION']
 
   define_with_central_layout('user-experience') do
+    project.no_iml
     package(:war).tap do |war|
       war.merge("#{unzip_dir}/bonita.war")
     end
@@ -46,6 +47,7 @@ define_with_central_layout('bonita') do
   end
 
   define_with_central_layout('keygen') do
+    project.no_iml
     resources.enhance %w(unzip)
     package(:jar).tap do |jar|
       jar.merge("#{unzip_dir}/commons-codec-1.4.jar")
@@ -61,6 +63,7 @@ define_with_central_layout('bonita') do
 
   desc 'A zip of the serverside client configuration directory'
   define_with_central_layout('client') do
+    project.no_iml
     resources.enhance %w(unzip) do
       package(:zip).tap do |zip|
         zip.include("#{unzip_dir}/client/*")
