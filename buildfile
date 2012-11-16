@@ -38,7 +38,7 @@ define_with_central_layout('bonita') do
   define_with_central_layout('user-experience') do
     project.no_iml
     package(:war).tap do |war|
-      war.merge("#{unzip_dir}/bonita.war")
+      war.merge("#{unzip_dir}/bonita.war").exclude("WEB-INF/web.xml")
     end
     check package(:war) do
       it.should contain('console/scripts/bonita.js')
