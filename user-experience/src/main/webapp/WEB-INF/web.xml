@@ -125,10 +125,16 @@
 		<url-pattern>/console/themeResource</url-pattern>
 	</filter-mapping>
 	<!-- Cache Filter Mapping End -->
+    <!-- HACKE START
+
+        Remove the filter that was disabled above
 	<filter-mapping>
 		<filter-name>SetCharacterEncoding</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+	HACKE END
+	-->
 	<servlet>
 		<servlet-name>LogoutServlet</servlet-name>
 		<servlet-class>org.bonitasoft.console.security.server.LogoutServlet</servlet-class>
