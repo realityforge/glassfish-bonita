@@ -4,7 +4,7 @@ BONITA_VERSION='5.8'
 unzip_dir = "#{File.dirname(__FILE__)}/target/extracted"
 
 task 'unzip' do
-  package_url = "http://repo.fire.dse.vic.gov.au/content/repositories/thirdparty/com/bonitasoft/bonitasoft-server-sp/#{BONITA_VERSION}/bonitasoft-server-sp-#{BONITA_VERSION}.zip"
+  package_url = "http://repo.fire.dse.vic.gov.au/content/repositories/fisg/com/bonitasoft/bonitasoft-server-sp/#{BONITA_VERSION}/bonitasoft-server-sp-#{BONITA_VERSION}.zip"
   package_zip = download("downloads/#{File.basename(package_url)}" => package_url)
   package_zip.invoke
   unzip_task = unzip(unzip_dir => package_zip)
