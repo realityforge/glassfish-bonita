@@ -6,7 +6,5 @@
 /*.ipr
 /*.iml
 /_buildr.rb
-/bin
-/.bundle
 /downloads
 
