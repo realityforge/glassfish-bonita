@@ -1,7 +1,7 @@
 require 'buildr/git_auto_version'
 require 'buildr/single_intermediate_layout'
 
-BONITA_VERSION='5.8'
+BONITA_VERSION='5.9.1'
 unzip_dir = "#{File.dirname(__FILE__)}/target/extracted"
 
 desc 'Unzip and download Bonita archive'
