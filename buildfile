@@ -1,4 +1,5 @@
 require 'buildr/git_auto_version'
+require 'buildr/single_intermediate_layout'
 
 BONITA_VERSION='5.8'
 unzip_dir = "#{File.dirname(__FILE__)}/target/extracted"
@@ -16,18 +17,7 @@ task 'unzip' do
   unzip_task.extract
 end
 
-def define_with_central_layout(name, &block)
-  layout = Layout::Default.new
-  layout[:target] = "#{File.dirname(__FILE__)}/target/#{name}"
-  layout[:reports] = "#{File.dirname(__FILE__)}/target/#{name}/_reports"
-
-  define(name, :layout => layout) do
-    project.instance_eval &block
-    project
-  end
-end
-
-define_with_central_layout('bonita') do
+define 'bonita' do
   project.group = 'au.gov.vic.dse.fire.bonita'
   compile.options.source = '1.6'
   compile.options.target = '1.6'
@@ -35,7 +25,7 @@ define_with_central_layout('bonita') do
 
   project.version = ENV['PRODUCT_VERSION'] if ENV['PRODUCT_VERSION']
 
-  define_with_central_layout('user-experience') do
+  define 'user-experience' do
     project.no_iml
     package(:war).tap do |war|
       war.merge("#{unzip_dir}/bonita.war").exclude("WEB-INF/web.xml")
@@ -46,7 +36,7 @@ define_with_central_layout('bonita') do
     end
   end
 
-  define_with_central_layout('keygen') do
+  define 'keygen' do
     project.no_iml
     resources.enhance %w(unzip)
     package(:jar).tap do |jar|
@@ -62,7 +52,7 @@ define_with_central_layout('bonita') do
   end
 
   desc 'A zip of the serverside client configuration directory'
-  define_with_central_layout('client') do
+  define 'client' do
     project.no_iml
     resources.enhance %w(unzip) do
       package(:zip).tap do |zip|
