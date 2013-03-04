@@ -4,6 +4,7 @@ require 'buildr/single_intermediate_layout'
 BONITA_VERSION='5.8'
 unzip_dir = "#{File.dirname(__FILE__)}/target/extracted"
 
+desc 'Unzip and download Bonita archive'
 task 'unzip' do
   package_url = "http://repo.fire.dse.vic.gov.au/content/repositories/fisg/com/bonitasoft/bonitasoft-server-sp/#{BONITA_VERSION}/bonitasoft-server-sp-#{BONITA_VERSION}.zip"
   package_zip = download("downloads/#{File.basename(package_url)}" => package_url)
