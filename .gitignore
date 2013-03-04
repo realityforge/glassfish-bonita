@@ -1,10 +1,6 @@
 /Gemfile.lock
 /artifacts
 /target
-/bonita/target
-/client/target
-/xcmis/target
-/keygen/target
 /reports
 /*.iws
 /*.ipr
