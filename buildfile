@@ -5,7 +5,7 @@ BONITA_VERSION='5.8'
 unzip_dir = "#{File.dirname(__FILE__)}/target/extracted"
 
 desc 'Unzip and download Bonita archive'
-task 'unzip' do
+task 'download_and_unzip' do
   package_url = "http://repo.fire.dse.vic.gov.au/content/repositories/fisg/com/bonitasoft/bonitasoft-server-sp/#{BONITA_VERSION}/bonitasoft-server-sp-#{BONITA_VERSION}.zip"
   package_zip = download("downloads/#{File.basename(package_url)}" => package_url)
   package_zip.invoke
@@ -39,7 +39,7 @@ define 'bonita' do
 
   define 'keygen' do
     project.no_iml
-    resources.enhance %w(unzip)
+    resources.enhance %w(download_and_unzip)
     package(:jar).tap do |jar|
       jar.merge("#{unzip_dir}/commons-codec-1.4.jar")
       jar.merge("#{unzip_dir}/generateKey-#{BONITA_VERSION}.jar")
@@ -55,7 +55,7 @@ define 'bonita' do
   desc 'A zip of the serverside client configuration directory'
   define 'client' do
     project.no_iml
-    resources.enhance %w(unzip) do
+    resources.enhance %w(download_and_unzip) do
       package(:zip).tap do |zip|
         zip.include("#{unzip_dir}/client/*")
       end
