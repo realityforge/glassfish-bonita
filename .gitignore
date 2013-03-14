@@ -1,7 +1,5 @@
 /Gemfile.lock
-/artifacts
 /target
-/reports
 /*.iws
 /*.ipr
 /*.iml
